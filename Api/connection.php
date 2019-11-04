@@ -1,6 +1,9 @@
 <?php
 
-Class Connection
+/**
+ * Class created -> if have more than just the user object,for all database transactions
+ */
+Class connection
 {
     public $conn;
     public $config;
@@ -8,7 +11,7 @@ Class Connection
     //create a connection
     function __construct()
     {
-        include('Config.php');
+        include('config.php');
         try {
 
             $this->conn = new PDO("mysql:host=" . $config['HOST'] . ";dbname=" . $config['DATABASE'],
@@ -35,10 +38,30 @@ Class Connection
         return $statement->fetchAll();
     }
 
+    public function singleResult($sql, $data)
+    {
+        $statement = $this->conn->prepare($sql);
+        $statement->execute($data);
+        return $statement->fetch();
+    }
+
+    public function update($sql, $data)
+    {
+        $statement = $this->conn->prepare($sql);
+        return $statement->execute($data);
+    }
+
     public function save($sql, $data)
     {
         $statement = $this->conn->prepare($sql);
-       return ($statement->execute($data))?'Information saved':'Failed !';
+        $statement->execute($data);
+        return $this->conn->lastInsertId();
+    }
+
+    public function delete($sql)
+    {
+        $statement = $this->conn->prepare($sql);
+        return $statement->execute();
     }
 
     public function disconnect()

@@ -38,7 +38,7 @@ $signed_date = date('Y-m-d', strtotime($data->signed_date));
 $retired_date = !empty($data->retired_date) ? date('Y-m-d', strtotime($data->retired_date)) : null;
 
 include '../Connection.php';
-$connection = new Connection();
+$connection = new connection();
 $query = "INSERT INTO player (player_id,first_name,last_name,signed_date,retired_date,FK_position,FK_team_id) VALUES (:player_id,:first_name,:last_name,:signed_date,:retired_date,:FK_position,:FK_team_id)";
 $player = [
     "player_id" => htmlspecialchars(strip_tags($data->player_id)),

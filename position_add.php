@@ -7,7 +7,7 @@
 if (isset($_POST['submit'])) {
 
     include 'Connection.php';
-    $connection = new Connection();
+    $connection = new connection();
     $position =[
         "name" =>  htmlspecialchars(strip_tags($_POST['name']))
     ];

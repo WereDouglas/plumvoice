@@ -1,6 +1,6 @@
 <?php
 include 'Connection.php';
-$connection = new Connection();
+$connection = new connection();
 $sql = "Select * from position";
 $result = $connection->listResults($sql);
 ?>

@@ -1,7 +1,5 @@
 <?php
-include ('../Header.php');
-header("Access-Control-Allow-Origin: *");
-header("Content-type: application/json;charset=UTF-8");
+
 include('User.php');
 $user = new User();
 $users = $user->records();

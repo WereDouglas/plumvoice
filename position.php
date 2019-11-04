@@ -1,7 +1,7 @@
 <?php
 include 'Connection.php';
 
-$connection = new Connection();
+$connection = new connection();
 $conn = $connection->Connect();
 
 $sql = "Select * from position";

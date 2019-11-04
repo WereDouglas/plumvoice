@@ -17,7 +17,7 @@ if (count($errors) > 1) {
     return;
 }
 include '../Connection.php';
-$connection = new Connection();
+$connection = new connection();
 $query = "INSERT INTO team (name,city,state) VALUES (:name,:city,:state)";
 $team = [
     //TODO name should be a Unique field

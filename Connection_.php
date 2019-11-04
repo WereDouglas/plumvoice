@@ -34,11 +34,17 @@ Class Connection
         $statement->execute();
         return $statement->fetchAll();
     }
+    public function singleResult($sql,$data)
+    {
+        $statement = $this->conn->prepare($sql);
+        $statement->execute($data);
+        return $statement->fetch();
+    }
 
     public function save($sql, $data)
     {
         $statement = $this->conn->prepare($sql);
-       return ($statement->execute($data))?true:false;
+        return ($statement->execute($data))?'Information saved':'Failed !';
     }
 
     public function disconnect()
