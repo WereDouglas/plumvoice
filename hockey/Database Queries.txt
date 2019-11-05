@@ -1,41 +1,57 @@
 
 Carefully review the attached database schema (database/hockey.png) and SQL file
 (database/hockey.sql) and answer the following questions.
+
 1. Write a query to return the full name, id, position, total goals, and signed date for all active
 players on the team 'dallas penguins'.(acitve based on the retired date being future or NULL)
 
-SELECT CONCAT_WS(" ",p.first_name,p.last_name) AS name,p.player_id as id ,p.FK_position,(SELECT COUNT(DISTINCT FK_player_id) FROM goal WHERE goal.FK_player_id = p.player_id)as goals,p.signed_date FROM player p LEFT JOIN team t ON t.team_id = p.FK_team_id WHERE p.retired_date >=CURDATE() AND t.name='dallas penguins';
+		SELECT CONCAT_WS(" ",p.first_name,p.last_name) AS name,p.player_id as id ,p.FK_position,(SELECT COUNT(DISTINCT FK_player_id) FROM goal WHERE goal.FK_player_id = p.player_id)as goals,p.signed_date FROM player p LEFT JOIN team t ON t.team_id = p.FK_team_id WHERE p.retired_date >=CURDATE() AND t.name='dallas penguins';
+
 2. Write a query to return the top 5 days in which the most goals were scored.
 
-SELECT DATE(from_unixtime(timestamp)) AS date, COUNT(*) as counts
-FROM goal
-group by timestamp
-Order By timestamp DESC
-LIMIT 5
+		SELECT DATE(from_unixtime(timestamp)) AS date, COUNT(*) as counts
+		FROM goal
+		group by timestamp
+		Order By timestamp DESC
+		LIMIT 5
 
 3. Write a query to return the full name, id, career length, and team for all retired player. Ordered
 the results by team name alphabetically from a-z and player name alphabetically from z-a.
 
 
+		SELECT CONCAT_WS(" ",p.first_name,p.last_name) AS name,p.player_id as id,DATEDIFF(Year, p.signed_date, p.retired_date) AS career_length,t.name FROM player p JOIN team t on t.team_id= p.FK_team_id ORDER BY name ASC,t.name DESC ;
+
 
 4. Write a query to return the full name, position, and total goals scored for all active players on all
 teams. Order the results by team, position, and then descending by total goals scored.
 
+		SELECT CONCAT_WS(" ",p.first_name,p.last_name) AS name ,p.FK_position,(SELECT COUNT(*) FROM goal WHERE goal.FK_player_id = p.player_id)as goals,t.name FROM player p LEFT JOIN team t ON t.team_id = p.FK_team_id  WHERE (p.retired_date >=CURDATE() OR p.retired_date =null )GROUP by name ORDER BY t.name,p.FK_position,goals DESC;
 
 
 5. Write a query to determine which position has scored the most overall goals in the year 2015.
-
+		Goals are stored as timestamp which includes datetime and time constraints with EPOCH /Unix timestamp.this makes such a query complex i would use datetime to generate an effect timestamp type as DATETIME to make this query generatable
 
 6. Write a query to return the top 10 teams who have scored the most goals in the past 5 years.
+
+	    (NOT SURE MISSING THE 5 YEears )SELECT  t.name,(SELECT COUNT(DISTINCT FK_player_id) FROM goal )as goals FROM  team t INNER JOIN player p ON p.FK_team_id = t.team_id  LEFT JOIN goal g ON g.FK_player_id = p.player_id GROUP BY t.name LIMIT 10 
 
 
 7. Write a query to return the total goals scored by each retired defensive player on team
 'michigan minutemen'.
+       
+	   SELECT  CONCAT_WS(" ",p.first_name,p.last_name) AS name,(SELECT COUNT(*) FROM goal WHERE FK_player_id=p.player_id )as goals FROM  player p LEFT JOIN goal g ON g.FK_player_id  = p.player_id JOIN team t ON t.team_id= p.FK_team_id  WHERE p.FK_position = 'defense' AND  (p.retired_date <=CURDATE()) AND t.name ='michigan minutemen' GROUP BY name
+	
 
 8. Write a query to return the team that has the most goalie goals overall.
 
+		SELECT t.name,(SELECT COUNT(*) FROM goal WHERE FK_player_id = p.player_id) as goals FROM player p JOIN team t ON t.team_id = p.FK_team_id  WHERE p.FK_POSITION = 'goalie' ORDER BY goals DESC LIMIT 1
+
+
 9. Build an index to efficiently return the full name and signed date for all players when searching
 by players last name.
+	
+	
+
 
 10. Are there any suggestions you would make to make the schema more efficient?
 
