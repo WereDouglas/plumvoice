@@ -3,6 +3,7 @@ include 'connection.php';
 
 Class User
 {
+
     public $user_id;
     public $email;
     public $password;
@@ -16,11 +17,12 @@ Class User
     private $db;
     private $users = [];
 
+
     function __construct()
     {
         $this->db = new connection();
     }
-    
+
     function records()
     {
         $query = "Select * from user";

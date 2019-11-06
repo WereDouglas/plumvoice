@@ -4,7 +4,7 @@ header("Content-type: application/x-www-form-urlencoded");
 header("Content-type: application/json");
 //include '../Variables.php';
 
-include('model/user.php');
+include('user.php');
 // request data
 $data_json = json_decode(file_get_contents("php://input"));
 $data = (empty($data_json)) ? json_decode(json_encode($_REQUEST)) : $data_json;
@@ -22,6 +22,7 @@ if (empty($data->first_name)) {
 if (empty($data->last_name)) {
     $errors[] = $pre_error_msg . 'Last Name';
 }
+
 if (empty($data->street_number)) {
     $errors[] = $pre_error_msg . ' Street Number';
 }
