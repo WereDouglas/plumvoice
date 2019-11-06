@@ -1,6 +1,6 @@
 <?php
 
-include('user.php');
+include('model/user.php');
 $user = new User();
 $users = $user->records();
 if (count($users) > 0) {

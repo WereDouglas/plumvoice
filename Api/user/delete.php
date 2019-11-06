@@ -11,7 +11,7 @@
 //error – string indicating the error
 //For 204 http codes (success):
 //    no body
-include('user.php');
+include('model/user.php');
 $user = new User();
 //echo $user->delete($id);
 if ($user->delete($id)) {

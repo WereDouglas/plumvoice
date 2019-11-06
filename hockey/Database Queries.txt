@@ -33,7 +33,7 @@ teams. Order the results by team, position, and then descending by total goals s
 
 6. Write a query to return the top 10 teams who have scored the most goals in the past 5 years.
 
-	    (NOT SURE MISSING THE 5 YEears )SELECT  t.name,(SELECT COUNT(DISTINCT FK_player_id) FROM goal )as goals FROM  team t INNER JOIN player p ON p.FK_team_id = t.team_id  LEFT JOIN goal g ON g.FK_player_id = p.player_id GROUP BY t.name LIMIT 10 
+	  SELECT  t.name,(SELECT COUNT(DISTINCT FK_player_id) FROM goal )as goals FROM  team t INNER JOIN player p ON p.FK_team_id = t.team_id  LEFT JOIN goal g ON g.FK_player_id = p.player_id WHERE g.timestamp > DATEDIFF(Year,-5,CURDATE()) GROUP BY t.name LIMIT 10 
 
 
 7. Write a query to return the total goals scored by each retired defensive player on team
@@ -50,11 +50,14 @@ teams. Order the results by team, position, and then descending by total goals s
 9. Build an index to efficiently return the full name and signed date for all players when searching
 by players last name.
 	
-	
+	!done
 
 
 10. Are there any suggestions you would make to make the schema more efficient?
-
+	
+	A.The positions should have an id for the primary key and foreign key in the player table as position_id .This will add an index to generate results faster 
+	B.The team table should have indexes for the primary key team_id.
+     
 
 11. Given the following unique values for each column (you can assume the dates are relatively
 uniform year-to-year):

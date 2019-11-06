@@ -5,7 +5,7 @@
 //404 – user not found
 //500 – internal server error
 
-include('user.php');
+include('model/user.php');
 $user = new User();
 $u = $user->view($id);
 
