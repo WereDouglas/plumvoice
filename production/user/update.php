@@ -28,40 +28,11 @@
 
 header("Content-type: application/x-www-form-urlencoded");
 header("Content-type: application/json");
-include 'variables.php';
-
-include('user.php');
+include('model/user.php');
 // request data
 $data_json = json_decode(file_get_contents("php://input"));
 $data = (empty($data_json)) ? json_decode(json_encode($_REQUEST)) : $data_json;
-//var_dump($data);
-//exit;
-if (empty($data->email)) {
-    $errors[] = $pre_error_msg . ' Email';
-}
-if (empty($data->password)) {
-    $errors[] = $pre_error_msg . ' Password';
-}
-if (empty($data->first_name)) {
-    $errors[] = $pre_error_msg . 'First Name';
-}
-if (empty($data->last_name)) {
-    $errors[] = $pre_error_msg . 'Last Name';
-}
 
-if (empty($data->street_number)) {
-    $errors[] = $pre_error_msg . ' Street Number';
-}
-
-if (empty($data->street_name)) {
-    $errors[] = $pre_error_msg . ' Street Name';
-}
-if (empty($data->city)) {
-    $errors[] = $pre_error_msg . ' City';
-}
-if (empty($data->state)) {
-    $errors[] = $pre_error_msg . ' State';
-}
 //TODO user json object state can post more than two characters
 if (strlen($data->state) > 2) {
     $errors[] = ' State is a 2 letter abbreviation';
@@ -80,23 +51,35 @@ if (count($errors) > 1) {
 $password = MD5($data->password);
 $apartment_number = empty($data->apartment_number) ? null : $data->apartment_number;
 $user = new User();
-$user->user_id = htmlspecialchars(strip_tags($id));
-$user->email = htmlspecialchars(strip_tags($data->email));
-$user->password = htmlspecialchars(strip_tags($password));
-$user->first_name = htmlspecialchars(strip_tags($data->first_name));
-$user->last_name = htmlspecialchars(strip_tags($data->last_name));
-$user->street_number = htmlspecialchars(strip_tags($data->street_number));
-$user->apartment_number = $apartment_number;
-$user->street_name = htmlspecialchars(strip_tags($data->street_name));
-$user->city = htmlspecialchars(strip_tags($data->city));
-$user->state = htmlspecialchars(strip_tags($data->state));
-$id = $user->Update($user);
-if ( $id > 0) {
+
+$update = "UPDATE user SET";
+$where = " WHERE user_id = " . $id;
+if (!empty($data->password)) {
+    $password = MD5(htmlspecialchars(strip_tags($data->password)));
+    $res = $user->Update($update . " password = :password" . $where, ["password" => $password]);
+}
+if (!empty($data->street_number)) {
+    $street_number = htmlspecialchars(strip_tags($data->street_number));
+    $res = $user->Update($update . " street_number = :street_number" . $where, ["street_number" => $street_number]);
+}
+if (!empty($data->city)) {
+    $city = htmlspecialchars(strip_tags($data->city));
+    $res = $user->Update($update . " city =:city" . $where, ["city" => $city]);
+}
+if (!empty($data->state)) {
+    $state = htmlspecialchars(strip_tags($data->state));
+    $res = $user->Update($update . " state = :state" . $where, ["state" => $state]);
+}
+
+if ($res > 0) {
     http_response_code(201);
-    echo $id;
+    $result['user'] =  $user->view($id);
+    $result ['result'] = true;
+    $result['message']= ' user update successfully ';
+
 } else {
     http_response_code(503);
-    $message['Message'] = " User not saved ";
-    echo json_encode($message);
+    $result['Message'] = " User not saved ";
+    $result ['result'] = false;
 }
-?>
+echo json_encode($result);

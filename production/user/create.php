@@ -4,7 +4,7 @@ header("Content-type: application/x-www-form-urlencoded");
 header("Content-type: application/json");
 //include '../Variables.php';
 
-include('user.php');
+include('model/user.php');
 // request data
 $data_json = json_decode(file_get_contents("php://input"));
 $data = (empty($data_json)) ? json_decode(json_encode($_REQUEST)) : $data_json;
@@ -22,7 +22,6 @@ if (empty($data->first_name)) {
 if (empty($data->last_name)) {
     $errors[] = $pre_error_msg . 'Last Name';
 }
-
 if (empty($data->street_number)) {
     $errors[] = $pre_error_msg . ' Street Number';
 }
@@ -63,12 +62,5 @@ $user->street_name = htmlspecialchars(strip_tags($data->street_name));
 $user->city = htmlspecialchars(strip_tags($data->city));
 $user->state = htmlspecialchars(strip_tags($data->state));
 $id = $user->save($user);
-if ( $id > 0) {
-    http_response_code(201);
-    echo $id;
-} else {
-    http_response_code(503);
-    $message['Message'] = " User not saved ";
-    echo json_encode($message);
-}
-?>
+echo json_encode($user);
+exit;

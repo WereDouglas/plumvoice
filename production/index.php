@@ -1,13 +1,15 @@
 <?php
 /**
  * development:
- * username: devUsername
+ * user_name: devUsername
  * password: $*rs9D(
  * production:
- * username: prodUsername
+ * user_name: prodUsername
  * password: &&KeXt97&sd
  **/
-$valid_passwords = array("devUsername" => "$*rs9D(");
+// show error reporting
+//error_reporting(0);
+$valid_passwords = array("prodUsername" => "&&KeXt97&sd");
 $valid_users = array_keys($valid_passwords);
 
 $user = $_SERVER['PHP_AUTH_USER'];
@@ -58,17 +60,14 @@ if (!empty($directory) && $parameter == "list") {
 }
 if (!empty($directory) && !empty($parameter)) {
     //directory not empty and parameter not empty hence its a GET call
-    //echo 'DIR:'.$directory.' PARAM: '.$parameter.' ( { get} based on the parameter) ';
+    //'DIR:'.$directory.' PARAM: '.$parameter.' ( { get} based on the parameter) ';
     $id =htmlspecialchars(strip_tags($parameter));
     if( $_SERVER['REQUEST_METHOD']==='GET') {
-        include("user/view.php");
+         include("user/view.php");
     } if( $_SERVER['REQUEST_METHOD']==='DELETE') {
-        include("user/delete.php");
-    }
+        include("user/delete.php");    }
     if( $_SERVER['REQUEST_METHOD']==='PUT') {
         include("user/update.php");
     }
     exit;
 }
-exit;
-?>

@@ -28,8 +28,6 @@
 
 header("Content-type: application/x-www-form-urlencoded");
 header("Content-type: application/json");
-include 'variables.php';
-
 include('model/user.php');
 // request data
 $data_json = json_decode(file_get_contents("php://input"));

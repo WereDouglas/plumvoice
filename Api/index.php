@@ -7,6 +7,8 @@
  * username: prodUsername
  * password: &&KeXt97&sd
  **/
+// show error reporting
+error_reporting(E_ALL);
 $valid_passwords = array("devUsername" => "$*rs9D(");
 $valid_users = array_keys($valid_passwords);
 

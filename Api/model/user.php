@@ -20,7 +20,9 @@ Class User
     {
         $this->db = new connection();
     }
-    
+
+    /**returns all user records
+     */
     function records()
     {
         $query = "Select * from user";
@@ -40,6 +42,7 @@ Class User
                 "city" => $user["city"],
                 "state" => $user["state"]
             );
+
             array_push($this->users, $u);
         }
         return $this->users;
@@ -48,26 +51,32 @@ Class User
     /**returns boolean true/false*/
     function save($user)
     {
-        $query = "INSERT INTO user (email,password,first_name,last_name,street_number,apartment_number,street_name,city,state) VALUES (:email,:password,:first_name,:last_name,:street_number,:apartment_number,:street_name,:city,:state)";
-
-        $data = [
-            "email" => $user->email,
-            "password" => $user->password,
-            "first_name" => $user->first_name,
-            "last_name" => $user->last_name,
-            "street_number" => $user->street_number,
-            "apartment_number" => $user->apartment_number,
-            "street_name" => $user->street_name,
-            "city" => $user->city,
-            "state" => $user->state
-
+        $fields = [
+            'email',
+            'password',
+            'first_name',
+            'last_name',
+            'street_number',
+            'apartment_number',
+            'street_name',
+            'city',
+            'state'
         ];
-        //var_dump($data);
-        /*returns true/false */
-        return $this->db->save($query, $data);
 
+        $fields_string = implode(',', $fields);
+        $fields_string2 = implode(',:', $fields);
+        $query = "INSERT INTO user ($fields_string) VALUES (:$fields_string2)";
+        $data = array_intersect_key(json_decode(json_encode($user), true), array_flip($fields));
+
+        return $this->db->save($query, $data);
     }
 
+    /**
+     * Update single user
+     * @param array $user
+     * returns 0  for false / 1 for true
+     * @return  bool
+     * **/
     function update($user)
     {
         $query = "UPDATE  user SET email=:email,password=:password, first_name=:first_name,last_name=:last_name,street_number=:street_number,apartment_number=:apartment_number,street_name=:street_name,city=:city,state=:state WHERE user_id = " . $user->user_id;
@@ -84,7 +93,6 @@ Class User
 
         ];
         return $this->db->update($query, $data);
-
     }
 
     /**
@@ -111,14 +119,15 @@ Class User
         $u->state = $results["state"];
         return $u;
     }
-
+    /**
+     * delete users
+     * @param int $id
+     * @ returns 0  for false / 1 for true
+     * @return bool
+     */
     function delete($id)
     {
         $query = "DELETE FROM  user WHERE user_id = " . $id . " AND user_id = LAST_INSERT_ID(" . $id . ")";
-        echo $this->db->delete($query);
-        exit;
-
+        return $this->db->delete($query);
     }
 }
-
-?>

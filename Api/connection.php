@@ -8,7 +8,7 @@ Class connection
     public $conn;
     public $config;
 
-    //create a connection
+    //create a connection when the class is called
     function __construct()
     {
         include('config.php');
@@ -22,12 +22,12 @@ Class connection
             echo "Connection Error:" . $e->getMessage();
         }
     }
+    /**default connection variable on the connection object **/
 
     public function Connect()
     {
         return $this->conn;
     }
-
     /**
      * collect results to any given query
      */
